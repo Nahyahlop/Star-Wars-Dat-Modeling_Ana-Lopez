@@ -1,10 +1,16 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
 from sqlalchemy import Integer
 from sqlalchemy import BigInteger
 from sqlalchemy import Float
+from sqlalchemy import ForeignKey, Integer
+from sqlalchemy.orm import Mapped, mapped_column
+from typing import Optional
+from typing import List
+from datetime import date
+
 
 db = SQLAlchemy()
 
@@ -12,7 +18,8 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+    Birthdate: Mapped [date]= mapped_column(nullable=False)
+    favorites: Mapped[List["Favorite"]] = relationship()
 
 
     def serialize(self):
@@ -33,6 +40,7 @@ class Planets(db.Model):
     rotation_period: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, unique=False)
     orbital_period: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, unique=False)
     gravity: Mapped[Optional[str]] = mapped_column(String(50), nullable=True, unique=False)
+    favorites: Mapped[List["Favorite"]] = relationship()
 
     def serialize(self):
         return {
@@ -62,6 +70,7 @@ class Character(db.Model):
     hair_color: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     skin_color: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     eye_color: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    favorites: Mapped[List["Favorite"]] = relationship()
 
     def serialize(self):
         return {
@@ -78,3 +87,9 @@ class Character(db.Model):
             "description": self.description,
             "image_url": self.image_url
         }
+    
+class Favorite(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
+    planet_id: Mapped[Optional[int]] = mapped_column(ForeignKey("planets.id"), nullable=True)
+    character_id: Mapped[Optional[int]] = mapped_column(ForeignKey("character.id"), nullable=True)
