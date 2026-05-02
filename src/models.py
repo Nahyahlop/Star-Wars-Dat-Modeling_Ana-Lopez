@@ -19,9 +19,9 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     Birthdate: Mapped [date]= mapped_column(nullable=False)
-    favorites: Mapped[List["Favorite"]] = relationship()
-
-
+   
+    favorites: Mapped[List["Favorite"]] = relationship(back_populates="user")
+    
     def serialize(self):
         return {
             "id": self.id,
@@ -40,8 +40,9 @@ class Planets(db.Model):
     rotation_period: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, unique=False)
     orbital_period: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, unique=False)
     gravity: Mapped[Optional[str]] = mapped_column(String(50), nullable=True, unique=False)
-    favorites: Mapped[List["Favorite"]] = relationship()
 
+    favorites: Mapped[List["Favorite"]] = relationship(back_populates="planets")
+   
     def serialize(self):
         return {
             "id": self.id,
@@ -70,7 +71,8 @@ class Character(db.Model):
     hair_color: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     skin_color: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     eye_color: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    favorites: Mapped[List["Favorite"]] = relationship()
+
+    favorites: Mapped[List["Favorite"]] = relationship(back_populates="character")
 
     def serialize(self):
         return {
@@ -93,3 +95,7 @@ class Favorite(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     planet_id: Mapped[Optional[int]] = mapped_column(ForeignKey("planets.id"), nullable=True)
     character_id: Mapped[Optional[int]] = mapped_column(ForeignKey("character.id"), nullable=True)
+
+    user: Mapped["User"] = relationship(back_populates="favorites")
+    character: Mapped[Optional["Character"]] = relationship(back_populates="favorites")
+    planet: Mapped[Optional["Planets"]] = relationship(back_populates="favorites")
