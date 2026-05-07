@@ -98,4 +98,4 @@ class Favorite(db.Model):
 
     user: Mapped["User"] = relationship(back_populates="favorites")
     character: Mapped[Optional["Character"]] = relationship(back_populates="favorites")
-    planet: Mapped[Optional["Planets"]] = relationship(back_populates="favorites")
+    planets: Mapped[Optional["Planets"]] = relationship(back_populates="favorites")
