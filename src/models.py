@@ -55,9 +55,6 @@ class Planets(db.Model):
             "rotation_period": self.rotation_period,
             "orbital_period": self.orbital_period,
             "gravity": self.gravity,
-            "surface_water": self.surface_water,
-            "description": self.description,
-            "image_url": self.image_url
         }
 
 class Character(db.Model):
@@ -86,8 +83,6 @@ class Character(db.Model):
             "hair_color": self.hair_color,
             "skin_color": self.skin_color,
             "eye_color": self.eye_color,
-            "description": self.description,
-            "image_url": self.image_url
         }
     
 class Favorite(db.Model):
